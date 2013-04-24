@@ -1,0 +1,29 @@
+#import modules
+import urllib
+from HTMLParser import HTMLParser
+
+#takes reddit URL
+response=urllib.urlopen('http://www.reddit.com/r/gaming/')
+html=response.read()
+
+#Parser
+class MyHTMLParser(HTMLParser):
+    def handle_starttag(self,tag,attrs):
+        if tag =="img":
+            #parse image tag only
+                for key, value in attrs:
+                  # look for the "id" in the html source
+                 if key == "id":
+                   for name, value in attrs:
+                     #look for image source
+                     if name == "src":
+                         #if the source is a .png image get the image link
+                       if value[len(value)-3:len(value)]=="png":
+                                            self.output=value
+#Getting image URL
+p= MyHTMLParser()
+p.feed (html)
+imgurl=p.output
+
+#Saving image file
+urllib.urlretrieve(imgurl,"meow.png")
